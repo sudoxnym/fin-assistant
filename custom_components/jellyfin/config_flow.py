@@ -28,9 +28,10 @@ RESULT_CONN_ERROR = "cannot_connect"
 RESULT_LOG_MESSAGE = {RESULT_CONN_ERROR: "Connection error"}
 
 
-@config_entries.HANDLERS.register(DOMAIN)
-class JellyfinFlowHandler(config_entries.ConfigFlow):
+
+class JellyfinFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for Jellyfin component."""
+
 
     VERSION = 1
     CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_PUSH
@@ -38,11 +39,11 @@ class JellyfinFlowHandler(config_entries.ConfigFlow):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        """Jellyfin options callback."""
+        """Return the options flow handler."""
         return JellyfinOptionsFlowHandler(config_entry)
 
     def __init__(self):
-        """Init JellyfinFlowHandler."""
+        """Initialize the config flow."""
         self._errors = {}
         self._url = None
         self._ssl = DEFAULT_SSL

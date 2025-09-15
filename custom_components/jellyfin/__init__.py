@@ -195,6 +195,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
         hass.data[DOMAIN][config.get(CONF_URL)][platform] = {}
         hass.data[DOMAIN][config.get(CONF_URL)][platform]["entities"] = []
 
+
     if hasattr(hass.config_entries, "async_forward_entry_setups"):
         await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
     else:
@@ -202,6 +203,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
             hass.async_create_task(
                 hass.config_entries.async_forward_entry_setup(config_entry, platform)
             )
+
 
     async_dispatcher_send(hass, SIGNAL_STATE_UPDATED)
 
@@ -216,6 +218,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     _LOGGER.info("Unloading jellyfin")
 
+
     if hasattr(hass.config_entries, "async_unload_platforms"):
         unload_ok = await hass.config_entries.async_unload_platforms(
             config_entry, PLATFORMS
@@ -226,6 +229,7 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry):
             unload_ok = unload_ok and await hass.config_entries.async_forward_entry_unload(
                 config_entry, platform
             )
+
 
     _jelly: JellyfinClientManager = hass.data[DOMAIN][config_entry.data.get(CONF_URL)]["manager"]
     await _jelly.stop()

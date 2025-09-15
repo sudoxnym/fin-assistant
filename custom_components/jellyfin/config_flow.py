@@ -28,8 +28,7 @@ RESULT_CONN_ERROR = "cannot_connect"
 RESULT_LOG_MESSAGE = {RESULT_CONN_ERROR: "Connection error"}
 
 
-@config_entries.HANDLERS.register(DOMAIN)
-class JellyfinFlowHandler(config_entries.ConfigFlow):
+class JellyfinFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for Jellyfin component."""
 
     VERSION = 1

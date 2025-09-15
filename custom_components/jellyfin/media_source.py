@@ -19,6 +19,7 @@ from homeassistant.const import (  # pylint: disable=import-error
     CONF_URL,
 )
 from homeassistant.components.media_player.const import (
+    MediaType,
     MEDIA_CLASS_ALBUM,
     MEDIA_CLASS_ARTIST,
     MEDIA_CLASS_CHANNEL,
@@ -30,15 +31,6 @@ from homeassistant.components.media_player.const import (
     MEDIA_CLASS_SEASON,
     MEDIA_CLASS_TRACK,
     MEDIA_CLASS_TV_SHOW,
-    MEDIA_TYPE_ALBUM,
-    MEDIA_TYPE_ARTIST,
-    MEDIA_TYPE_CHANNEL,
-    MEDIA_TYPE_EPISODE,
-    MEDIA_TYPE_MOVIE,
-    MEDIA_TYPE_PLAYLIST,
-    MEDIA_TYPE_SEASON,
-    MEDIA_TYPE_TRACK,
-    MEDIA_TYPE_TVSHOW,
 )
 
 from . import JellyfinClientManager, JellyfinDevice, autolog
@@ -49,29 +41,29 @@ from .const import (
 )
 
 PLAYABLE_MEDIA_TYPES = [
-    MEDIA_TYPE_ALBUM,
-    MEDIA_TYPE_ARTIST,
-    MEDIA_TYPE_TRACK,
+    MediaType.ALBUM,
+    MediaType.ARTIST,
+    MediaType.TRACK,
 ]
 
 CONTAINER_TYPES_SPECIFIC_MEDIA_CLASS = {
-    MEDIA_TYPE_ALBUM: MEDIA_CLASS_ALBUM,
-    MEDIA_TYPE_ARTIST: MEDIA_CLASS_ARTIST,
-    MEDIA_TYPE_PLAYLIST: MEDIA_CLASS_PLAYLIST,
-    MEDIA_TYPE_SEASON: MEDIA_CLASS_SEASON,
-    MEDIA_TYPE_TVSHOW: MEDIA_CLASS_TV_SHOW,
+    MediaType.ALBUM: MEDIA_CLASS_ALBUM,
+    MediaType.ARTIST: MEDIA_CLASS_ARTIST,
+    MediaType.PLAYLIST: MEDIA_CLASS_PLAYLIST,
+    MediaType.SEASON: MEDIA_CLASS_SEASON,
+    MediaType.TVSHOW: MEDIA_CLASS_TV_SHOW,
 }
 
 CHILD_TYPE_MEDIA_CLASS = {
-    MEDIA_TYPE_SEASON: MEDIA_CLASS_SEASON,
-    MEDIA_TYPE_ALBUM: MEDIA_CLASS_ALBUM,
-    MEDIA_TYPE_ARTIST: MEDIA_CLASS_ARTIST,
-    MEDIA_TYPE_MOVIE: MEDIA_CLASS_MOVIE,
-    MEDIA_TYPE_PLAYLIST: MEDIA_CLASS_PLAYLIST,
-    MEDIA_TYPE_TRACK: MEDIA_CLASS_TRACK,
-    MEDIA_TYPE_TVSHOW: MEDIA_CLASS_TV_SHOW,
-    MEDIA_TYPE_CHANNEL: MEDIA_CLASS_CHANNEL,
-    MEDIA_TYPE_EPISODE: MEDIA_CLASS_EPISODE,
+    MediaType.SEASON: MEDIA_CLASS_SEASON,
+    MediaType.ALBUM: MEDIA_CLASS_ALBUM,
+    MediaType.ARTIST: MEDIA_CLASS_ARTIST,
+    MediaType.MOVIE: MEDIA_CLASS_MOVIE,
+    MediaType.PLAYLIST: MEDIA_CLASS_PLAYLIST,
+    MediaType.TRACK: MEDIA_CLASS_TRACK,
+    MediaType.TVSHOW: MEDIA_CLASS_TV_SHOW,
+    MediaType.CHANNEL: MEDIA_CLASS_CHANNEL,
+    MediaType.EPISODE: MEDIA_CLASS_EPISODE,
 }
 
 IDENTIFIER_SPLIT = "~~"
@@ -140,30 +132,30 @@ def async_parse_identifier(
 
 def Type2Mediatype(type):
     switcher = {
-        "Movie": MEDIA_TYPE_MOVIE,
-        "Series": MEDIA_TYPE_TVSHOW,
-        "Season": MEDIA_TYPE_SEASON,
-        "Episode": MEDIA_TYPE_EPISODE,
-        "Music": MEDIA_TYPE_ALBUM,
-        "Audio": MEDIA_TYPE_TRACK,
+        "Movie": MediaType.MOVIE,
+        "Series": MediaType.TVSHOW,
+        "Season": MediaType.SEASON,
+        "Episode": MediaType.EPISODE,
+        "Music": MediaType.ALBUM,
+        "Audio": MediaType.TRACK,
         "BoxSet": MEDIA_CLASS_DIRECTORY,
         "Folder": MEDIA_CLASS_DIRECTORY,
         "CollectionFolder": MEDIA_CLASS_DIRECTORY,
         "Playlist": MEDIA_CLASS_DIRECTORY,
         "PlaylistsFolder": MEDIA_CLASS_DIRECTORY,
         "ManualPlaylistsFolder": MEDIA_CLASS_DIRECTORY,
-        "MusicArtist": MEDIA_TYPE_ARTIST,
-        "MusicAlbum": MEDIA_TYPE_ALBUM,
+        "MusicArtist": MediaType.ARTIST,
+        "MusicAlbum": MediaType.ALBUM,
     }
     return switcher[type]
 
 def Type2Mimetype(type):
     switcher = {
         "Movie": "video/mp4",
-        "Series": MEDIA_TYPE_TVSHOW,
-        "Season": MEDIA_TYPE_SEASON,
+        "Series": MediaType.TVSHOW,
+        "Season": MediaType.SEASON,
         "Episode": "video/mp4",
-        "Music": MEDIA_TYPE_ALBUM,
+        "Music": MediaType.ALBUM,
         "Audio": "audio/mp3",
         "BoxSet": MEDIA_CLASS_DIRECTORY,
         "Folder": MEDIA_CLASS_DIRECTORY,
@@ -171,8 +163,8 @@ def Type2Mimetype(type):
         "Playlist": MEDIA_CLASS_DIRECTORY,
         "PlaylistsFolder": MEDIA_CLASS_DIRECTORY,
         "ManualPlaylistsFolder": MEDIA_CLASS_DIRECTORY,
-        "MusicArtist": MEDIA_TYPE_ARTIST,
-        "MusicAlbum": MEDIA_TYPE_ALBUM,
+        "MusicArtist": MediaType.ARTIST,
+        "MusicAlbum": MediaType.ALBUM,
     }
     return switcher[type]
 
@@ -247,7 +239,7 @@ async def async_library_items(jelly_cm: JellyfinClientManager,
             can_expand=True,
             children=[],
         )
-    elif media_content_type in [MEDIA_CLASS_DIRECTORY, MEDIA_TYPE_ARTIST, MEDIA_TYPE_ALBUM, MEDIA_TYPE_PLAYLIST, MEDIA_TYPE_TVSHOW, MEDIA_TYPE_SEASON]:
+    elif media_content_type in [MEDIA_CLASS_DIRECTORY, MediaType.ARTIST, MediaType.ALBUM, MediaType.PLAYLIST, MediaType.TVSHOW, MediaType.SEASON]:
         query = {
             "ParentId": media_content_id,
             "sortBy": "SortName",
@@ -285,7 +277,7 @@ async def async_library_items(jelly_cm: JellyfinClientManager,
 
     items = await jelly_cm.get_items(query)
     for item in items:
-        if media_content_type in [None, "library", MEDIA_CLASS_DIRECTORY, MEDIA_TYPE_ARTIST, MEDIA_TYPE_ALBUM, MEDIA_TYPE_PLAYLIST, MEDIA_TYPE_TVSHOW, MEDIA_TYPE_SEASON]:
+        if media_content_type in [None, "library", MEDIA_CLASS_DIRECTORY, MediaType.ARTIST, MediaType.ALBUM, MediaType.PLAYLIST, MediaType.TVSHOW, MediaType.SEASON]:
             if item["IsFolder"]:
                 library_info.children_media_class = MEDIA_CLASS_DIRECTORY
                 library_info.children.append(BrowseMediaSource(

@@ -7,7 +7,7 @@ import voluptuous as vol
 
 from homeassistant import config_entries, exceptions
 from homeassistant.core import callback
-from homeassistant.const import ( # pylint: disable=import-error
+from homeassistant.const import (  # pylint: disable=import-error
     CONF_URL,
     CONF_VERIFY_SSL,
     CONF_USERNAME,
@@ -47,6 +47,7 @@ class JellyfinFlowHandler(config_entries.ConfigFlow):
         self._url = None
         self._ssl = DEFAULT_SSL
         self._verify_ssl = DEFAULT_VERIFY_SSL
+        self._is_import = False
 
     async def async_step_import(self, user_input=None):
         """Handle configuration by yaml file."""

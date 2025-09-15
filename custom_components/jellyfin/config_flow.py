@@ -28,8 +28,10 @@ RESULT_CONN_ERROR = "cannot_connect"
 RESULT_LOG_MESSAGE = {RESULT_CONN_ERROR: "Connection error"}
 
 
-class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Jellyfin."""
+
+class JellyfinFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+    """Config flow for Jellyfin component."""
+
 
     VERSION = 1
     CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_PUSH

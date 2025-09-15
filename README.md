@@ -1,3 +1,10 @@
+# fin-assistant
+---
+fin-assistant is the revival of jellyfin-ha to bring the ability for voice assist to jellyfin.
+
+
+
+
 # jellyfin_ha
 
 Jellyfin integration for Home Assistant

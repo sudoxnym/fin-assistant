@@ -4,10 +4,7 @@ from typing import Mapping, MutableMapping, Optional, Sequence, Iterable, List, 
 
 from homeassistant.components.media_player import PLATFORM_SCHEMA, MediaPlayerEntity
 from homeassistant.components.media_player.const import (
-    MEDIA_TYPE_CHANNEL,
-    MEDIA_TYPE_MOVIE,
-    MEDIA_TYPE_MUSIC,
-    MEDIA_TYPE_TVSHOW,
+    MediaType,
     SUPPORT_PLAY_MEDIA,
     SUPPORT_NEXT_TRACK,
     SUPPORT_PAUSE,
@@ -230,19 +227,19 @@ class JellyfinMediaPlayer(MediaPlayerEntity):
         """Content type of current playing media."""
         media_type = self.device.media_type
         if media_type == "Episode":
-            return MEDIA_TYPE_TVSHOW
+            return MediaType.TVSHOW
         if media_type == "Movie":
-            return MEDIA_TYPE_MOVIE
+            return MediaType.MOVIE
         if media_type == "Trailer":
             return MEDIA_TYPE_TRAILER
         if media_type == "Music":
-            return MEDIA_TYPE_MUSIC
+            return MediaType.MUSIC
         if media_type == "Video":
             return MEDIA_TYPE_GENERIC_VIDEO
         if media_type == "Audio":
-            return MEDIA_TYPE_MUSIC
+            return MediaType.MUSIC
         if media_type == "TvChannel":
-            return MEDIA_TYPE_CHANNEL
+            return MediaType.CHANNEL
         return None
 
     @property
